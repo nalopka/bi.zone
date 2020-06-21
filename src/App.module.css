@@ -1,0 +1,16 @@
+* {
+    padding: 0;
+    margin: 0;
+}
+
+.app {
+    width: 100%;
+    height: 100vh;
+    font-weight: bold;
+    background: center / cover no-repeat url("./images/logo.jpg");
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+

@@ -1,0 +1,19 @@
+.movieItem {
+    width: 700px;
+    cursor: pointer;
+}
+
+.main {
+    display: flex;
+    height: 180px;
+}
+
+.poster {
+    width: 120px;
+
+}
+
+.about {
+    padding-left: 8px;
+    width: 500px;
+}

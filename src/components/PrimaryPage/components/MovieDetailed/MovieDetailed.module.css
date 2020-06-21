@@ -1,0 +1,9 @@
+.poster {
+    margin-right: 10px;
+    margin-bottom: 10px;
+    height: 400px;
+    width: 300px;
+}
+.top {
+    display: flex;
+}

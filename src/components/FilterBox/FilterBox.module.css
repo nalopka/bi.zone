@@ -1,0 +1,102 @@
+.main {
+    width: 100%;
+}
+.mainPage {
+    padding: 10px;
+    width: 50rem;
+    background-color: white;
+    border-radius: 10px;
+}
+.mainPageForm {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .input {
+        width: 600px;
+    }
+}
+
+.posterImg {
+    margin-right: 5px;
+    width: 20px;
+    height: 25px;
+}
+
+
+.form {
+    display: flex;
+    align-items: center;
+    p {
+        margin: 0;
+    }
+    .input {
+        margin: 0 10px;
+        width: 500px;
+    }
+
+    .field {
+        margin: 0 10px;
+    }
+
+    .button {
+        width: 8rem;
+        height: auto;
+        font-size: 16px;
+    }
+}
+
+.field {
+    margin-bottom: 1rem;
+    height: 33px;
+    width: auto;
+}
+
+
+.formItem {
+    margin-bottom: 8px;
+}
+
+.search {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.title {
+    text-align: center;
+}
+
+.filters {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.filterItem {
+    width: 450px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.label {
+    font-size: 16px;
+    padding-right: 5px;
+}
+
+
+
+.filterField {
+    width: 200px !important;
+}
+
+.input {
+    width: 80%;
+    margin-bottom: 1rem;
+}
+
+.button {
+    width: 9rem;
+    height: 3rem;
+    font-size: 20px;
+}

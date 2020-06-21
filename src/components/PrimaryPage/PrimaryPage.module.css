@@ -1,0 +1,9 @@
+.movieListWrapper {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.pageHeader {
+    background-color: #eee;
+}
