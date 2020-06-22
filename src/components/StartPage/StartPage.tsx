@@ -4,14 +4,14 @@ import { useHistory } from 'react-router-dom';
 import { Store } from 'antd/lib/form/interface';
 import queryString from 'querystring';
 import _ from 'lodash';
-import FilterBox from '../FilterBox';
-import s from './MainPage.module.css';
+import FilterBox from '../FilterBox/FilerBox';
+import s from './StartPage.module.css';
 
 interface Props {
 
 }
 
-const MainPage: FC<Props> = () => {
+const StartPage: FC<Props> = () => {
     const history = useHistory();
 
     const onSelectName = (keyword: string) => {
@@ -39,4 +39,4 @@ const MainPage: FC<Props> = () => {
     );
 };
 
-export default MainPage;
+export default StartPage;

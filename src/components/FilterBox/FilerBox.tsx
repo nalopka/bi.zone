@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useContext, useState } from 'react';
 import _ from 'lodash';
 
 import { Button, Form, Input, Select } from 'antd';
@@ -10,6 +10,7 @@ import { GENRES_LIST } from '../../index';
 import { mockYears } from './helpers';
 import { MovieInfo } from '../../intefaces';
 import { fetchMoviesByName, getPoster } from '../../api/api';
+import { GenresContext } from '../GenresProvider/GenresProvider';
 
 interface Props {
     isMainPage?: boolean,
@@ -20,6 +21,7 @@ interface Props {
 }
 
 const FilterBox: FC<Props> = ({ isMainPage, initialValues, onSearch, onSelectName }) => {
+    const genresList = useContext(GenresContext);
     const [ form ] = Form.useForm();
     const [ movies, setMovies ] = useState<MovieInfo[]>([]);
 
@@ -27,7 +29,7 @@ const FilterBox: FC<Props> = ({ isMainPage, initialValues, onSearch, onSelectNam
         if (!keyword) setMovies([]);
         if (keyword.length >= 1) {
             const response = await fetchMoviesByName(keyword);
-            setMovies(response);
+            setMovies(response.results);
         } else {
             setMovies([]);
         }
@@ -79,7 +81,7 @@ const FilterBox: FC<Props> = ({ isMainPage, initialValues, onSearch, onSelectNam
     };
 
     const renderGenres = () => {
-        const options = _.map(GENRES_LIST, genre => (
+        const options = _.map(genresList, genre => (
             <Select.Option
                 value={genre.name}
                 key={genre.id}

@@ -1,8 +1,8 @@
 export interface FormValues {
-    keyword: string;
-    genre: string;
-    rating: string;
-    year: string;
+    keyword?: string;
+    genre?: string;
+    rating?: string;
+    year?: string;
 }
 
 export interface MovieInfo {

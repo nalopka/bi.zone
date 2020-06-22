@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useContext, useEffect, useState } from 'react';
 import queryString from 'query-string';
 import { PageHeader, Spin, Empty, Affix } from 'antd';
 import { useHistory, useLocation } from 'react-router-dom';
@@ -10,16 +10,15 @@ import { Store } from 'antd/lib/form/interface';
 
 import s from './PrimaryPage.module.css';
 
-import FilterBox from '../FilterBox';
 import MovieItem from './components/MovieItem';
-import { MovieInfo } from '../../intefaces';
+import { FormValues, MovieInfo } from '../../intefaces';
 import MovieDetailed from './components/MovieDetailed';
 import { fetchMovies, fetchMoviesByName } from '../../api/api';
+import FilterBox from '../FilterBox/FilerBox';
+import { GenresContext } from '../GenresProvider/GenresProvider';
 
-interface Props {
-}
-
-const PrimaryPage: FC<Props> = () => {
+const PrimaryPage: FC = () => {
+    const genresList = useContext(GenresContext);
     const [ page, setPage ] = useState(1);
     const [ detailedMovieId, setDetailedMovieId ] = useState<number | null>(null);
     const [ visible, setVisible ] = useState(false);
@@ -28,15 +27,15 @@ const PrimaryPage: FC<Props> = () => {
 
     const history = useHistory();
     const location = useLocation();
-    const initialValues = queryString.parse(location.search);
+    const initialValues: FormValues = queryString.parse(location.search);
 
     useEffect(() => {
         if (initialValues.keyword) {
             getMoviesByName(initialValues.keyword);
         } else {
-            discoverMovies(page, true, initialValues);
+            discoverMovies(1, initialValues);
         }
-    }, []);
+    }, [ genresList ]);
 
     const onSearch = (values: Store) => {
         const search = queryString.stringify(_.pickBy(_.omit(values, 'keyword'), _.identity));
@@ -44,7 +43,7 @@ const PrimaryPage: FC<Props> = () => {
             pathname: '/movies',
             search: `${search}`,
         });
-        discoverMovies(page, true, values).finally(() => setLoading(false));
+        discoverMovies(page, values).finally(() => setLoading(false));
     };
 
     const getMoviesByName = async (keyword: string) => {
@@ -52,17 +51,27 @@ const PrimaryPage: FC<Props> = () => {
 
         const response = await fetchMoviesByName(keyword);
 
-        setMoviesList(response);
+        setMoviesList(response.results);
         setLoading(false);
     };
 
-    const discoverMovies = async (page: number, initRequest?: boolean, requestParams?: Store) => {
+    const discoverMovies = async (page: number, requestParams: Store) => {
         setLoading(true);
 
-        const response = await fetchMovies(page, initRequest, requestParams);
+        const response = await fetchMovies(page, requestParams, genresList);
 
         setPage(response.page);
-        setMoviesList(initRequest ? response.results : _.concat(moviesList, response.results));
+        setMoviesList(response.results);
+        setLoading(false);
+    };
+
+    const loadMoreMovies = async (page: number) => {
+        setLoading(true);
+
+        const response = await fetchMovies(page, initialValues, genresList);
+
+        setPage(response.page);
+        setMoviesList(_.concat(moviesList, response.results));
         setLoading(false);
     };
 
@@ -118,7 +127,7 @@ const PrimaryPage: FC<Props> = () => {
                     <InfiniteScroll
                         initialLoad={false}
                         pageStart={page}
-                        loadMore={page => discoverMovies(page, false, initialValues)}
+                        loadMore={loadMoreMovies}
                         hasMore={!_.has(initialValues, 'keyword')}
                         threshold={500}
                     >

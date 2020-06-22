@@ -20,14 +20,14 @@ const MovieDetailed: FC<Props> = ({ visible, showDetailedInfo, id }) => {
 
     useEffect(() => {
         if (!_.isNull(id)) {
-            setLoading(true);
-            getDetailedMovieInfo(id)
-                .finally(() => setLoading(false));
+            getDetailedMovieInfo(id);
         }
     }, [ id ]);
 
     const getDetailedMovieInfo = async (id: number) => {
+        setLoading(true);
         const response = await fetchDetailedInfo(id);
+        setLoading(false);
         setInfo(response);
     };
 
