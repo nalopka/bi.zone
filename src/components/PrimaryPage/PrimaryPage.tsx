@@ -3,7 +3,6 @@ import queryString from 'query-string';
 import { PageHeader, Spin, Empty, Affix } from 'antd';
 import { useHistory, useLocation } from 'react-router-dom';
 import _ from 'lodash';
-import axios from 'axios';
 import InfiniteScroll from 'react-infinite-scroller';
 import { LoadingOutlined } from '@ant-design/icons';
 
@@ -11,12 +10,11 @@ import { Store } from 'antd/lib/form/interface';
 
 import s from './PrimaryPage.module.css';
 
-import { API_KEY, GENRES_LIST } from '../../index';
-
 import FilterBox from '../FilterBox';
 import MovieItem from './components/MovieItem';
 import { MovieInfo } from '../../intefaces';
 import MovieDetailed from './components/MovieDetailed';
+import { fetchMovies, fetchMoviesByName } from '../../api/api';
 
 interface Props {
 }
@@ -31,7 +29,6 @@ const PrimaryPage: FC<Props> = () => {
     const history = useHistory();
     const location = useLocation();
     const initialValues = queryString.parse(location.search);
-    console.log('initialValues ', initialValues);
 
     useEffect(() => {
         if (initialValues.keyword) {
@@ -52,32 +49,20 @@ const PrimaryPage: FC<Props> = () => {
 
     const getMoviesByName = async (keyword: string) => {
         setLoading(true);
-        const url = 'https://api.themoviedb.org/3/search/movie';
-        const params = {
-            query: keyword,
-            api_key: API_KEY,
-        };
-        const { data } = await axios.get(url, { params });
 
-        setMoviesList(data.results);
+        const response = await fetchMoviesByName(keyword);
+
+        setMoviesList(response);
         setLoading(false);
     };
 
     const discoverMovies = async (page: number, initRequest?: boolean, requestParams?: Store) => {
         setLoading(true);
-        const genre = _.find(GENRES_LIST, _.get(requestParams, 'genre'));
-        const url = 'https://api.themoviedb.org/3/discover/movie';
-        const params = {
-            api_key: API_KEY,
-            with_genres: genre,
-            primary_release_year: _.get(requestParams, 'year'),
-            sort_by: 'popularity.desc',
-            'vote_average.gte': _.get(requestParams, 'rating'),
-            page: initRequest ? 1 : page,
-        };
-        const { data } = await axios.get(url, { params });
-        setPage(data.page);
-        setMoviesList(initRequest ? data.results : _.concat(moviesList, data.results));
+
+        const response = await fetchMovies(page, initRequest, requestParams);
+
+        setPage(response.page);
+        setMoviesList(initRequest ? response.results : _.concat(moviesList, response.results));
         setLoading(false);
     };
 
@@ -85,9 +70,9 @@ const PrimaryPage: FC<Props> = () => {
         setVisible(visible);
         setDetailedMovieId(id);
     };
-
     const renderMovies = () => {
         if (_.isEmpty(moviesList)) return <Empty />;
+
         return _.map(moviesList, (movie) => {
             const info = {
                 id: movie.id,
@@ -116,14 +101,13 @@ const PrimaryPage: FC<Props> = () => {
                     subTitle="Список фильмов"
                     extra={[
                         <FilterBox
+                            key="filter-box"
                             onSelectName={getMoviesByName}
                             onSearch={onSearch}
                             initialValues={initialValues}
                         />
                     ]}
-                >
-
-                </PageHeader>
+                />
             </Affix>
             <div>
                 <Spin
@@ -136,7 +120,7 @@ const PrimaryPage: FC<Props> = () => {
                         pageStart={page}
                         loadMore={page => discoverMovies(page, false, initialValues)}
                         hasMore={!_.has(initialValues, 'keyword')}
-                        threshold={250}
+                        threshold={500}
                     >
                         <div className={s.movieListWrapper}>
                             {renderMovies()}

@@ -1,16 +1,15 @@
 import React, { FC, useState } from 'react';
 import _ from 'lodash';
-import axios from 'axios';
 
 import { Button, Form, Input, Select } from 'antd';
 import { Store } from 'antd/lib/form/interface';
 
 import s from './FilterBox.module.css';
 
-import { API_KEY, GENRES_LIST } from '../../index';
-import { Genres } from './interfaces';
+import { GENRES_LIST } from '../../index';
 import { mockYears } from './helpers';
 import { MovieInfo } from '../../intefaces';
+import { fetchMoviesByName, getPoster } from '../../api/api';
 
 interface Props {
     isMainPage?: boolean,
@@ -24,31 +23,27 @@ const FilterBox: FC<Props> = ({ isMainPage, initialValues, onSearch, onSelectNam
     const [ form ] = Form.useForm();
     const [ movies, setMovies ] = useState<MovieInfo[]>([]);
 
-    const onNameSearch = _.debounce((search: string = '') => {
-        if (!search) setMovies([]);
-        if (search.length >= 1) {
-            getMoviesByTitle(search);
+    const onNameSearch = _.debounce(async (keyword: string = '') => {
+        if (!keyword) setMovies([]);
+        if (keyword.length >= 1) {
+            const response = await fetchMoviesByName(keyword);
+            setMovies(response);
         } else {
             setMovies([]);
         }
     }, 500);
-
-    const getMoviesByTitle = async (title: string) => {
-        const url = 'https://api.themoviedb.org/3/search/movie';
-        const params = {
-            query: title,
-            api_key: API_KEY,
-        };
-        const { data } = await axios.get(url, { params });
-        setMovies(data.results);
-    };
 
     const renderRating = () => {
         const ratings = [ 'от 1', 'от 2', 'от 3', 'от 4', 'от 5', 'от 6', 'от 7', 'от 8', 'от 9' ];
         const ratingOptions = _.map(ratings, (rating) => {
             const ratingValue = _.split(rating, ' ')[1];
             return (
-                <Select.Option value={ratingValue} key={rating}>{rating}</Select.Option>
+                <Select.Option
+                    value={ratingValue}
+                    key={rating}
+                >
+                    {rating}
+                </Select.Option>
             );
         });
         return (
@@ -64,7 +59,14 @@ const FilterBox: FC<Props> = ({ isMainPage, initialValues, onSearch, onSelectNam
 
     const renderYear = () => {
         const years = mockYears();
-        const optionsYears = _.map(years, year => (<Select.Option key={year} value={year}>{year}</Select.Option>));
+        const optionsYears = _.map(years, year => (
+            <Select.Option
+                key={year}
+                value={year}
+            >
+                {year}
+            </Select.Option>
+        ));
         return (
             <Select
                 placeholder="Выберите год"
@@ -77,7 +79,14 @@ const FilterBox: FC<Props> = ({ isMainPage, initialValues, onSearch, onSelectNam
     };
 
     const renderGenres = () => {
-        const options = _.map(GENRES_LIST, genre => (<Select.Option value={genre.name} key={genre.id}>{genre.name}</Select.Option>));
+        const options = _.map(GENRES_LIST, genre => (
+            <Select.Option
+                value={genre.name}
+                key={genre.id}
+            >
+                {genre.name}
+            </Select.Option>
+        ));
         return (
             <Select
                 className={s.filterField}
@@ -91,10 +100,17 @@ const FilterBox: FC<Props> = ({ isMainPage, initialValues, onSearch, onSelectNam
     
     const renderNameField = () => {
         const options = _.map(movies, (movie) => {
-            const posterUrl = movie.poster_path ? `https://image.tmdb.org/t/p/original/${movie.poster_path}` : '';
+            const posterUrl = getPoster(movie.poster_path);
             return (
-                <Select.Option key={movie.id} value={movie.title}>
-                    <img className={s.posterImg} src={posterUrl} alt="poster logo" />
+                <Select.Option
+                    key={movie.id}
+                    value={movie.title}
+                >
+                    <img
+                        className={s.posterImg}
+                        src={posterUrl}
+                        alt="poster logo"
+                    />
                     {movie.title}
                 </Select.Option>
             );

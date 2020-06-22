@@ -1,13 +1,12 @@
 import React, { FC, useEffect, useState } from 'react';
 import { Drawer, Spin } from 'antd';
-import axios from 'axios';
 import _ from 'lodash';
 import { LoadingOutlined } from '@ant-design/icons';
 
 import s from './MovieDetailed.module.css';
-import { API_KEY } from '../../../../index';
 import { MovieInfo } from './interfaces';
 import { showGenres, timeConvert } from './helpers';
+import { fetchDetailedInfo, getPoster } from '../../../../api/api';
 
 interface Props {
     id: number | null,
@@ -17,7 +16,8 @@ interface Props {
 
 const MovieDetailed: FC<Props> = ({ visible, showDetailedInfo, id }) => {
     const [ loading, setLoading ] = useState(false);
-    const [ info, setInfo ] = useState<MovieInfo>({});
+    const [ info, setInfo ] = useState<MovieInfo | undefined>(undefined);
+
     useEffect(() => {
         if (!_.isNull(id)) {
             setLoading(true);
@@ -27,21 +27,18 @@ const MovieDetailed: FC<Props> = ({ visible, showDetailedInfo, id }) => {
     }, [ id ]);
 
     const getDetailedMovieInfo = async (id: number) => {
-        const url = `https://api.themoviedb.org/3/movie/${id}`;
-        const params = {
-            api_key: API_KEY,
-        };
-        const { data } = await axios.get(url, { params });
-        setInfo(data);
+        const response = await fetchDetailedInfo(id);
+        setInfo(response);
     };
 
     const onClose = () => {
-        setInfo({});
+        setInfo(undefined);
         showDetailedInfo(false, null);
     };
 
     const renderDrawerBody = () => {
-        const posterUrl = info.poster_path ? `https://image.tmdb.org/t/p/original/${info.poster_path}` : '';
+        if (!info) return null;
+        const posterUrl = getPoster(info.poster_path);
         return (
             <div>
                 <Spin

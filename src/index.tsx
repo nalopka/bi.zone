@@ -4,7 +4,6 @@ import 'antd/dist/antd.css';
 
 import Core from './App';
 
-export const API_KEY = '58a78ab2796acf7abf063c349881ea03';
 export const GENRES_LIST = [
     {
         id: 28,

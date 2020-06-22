@@ -1,5 +1,6 @@
-import { Genres } from '../../../FilterBox/interfaces';
 import _ from 'lodash';
+
+import { Genre } from '../../../FilterBox/interfaces';
 
 export const timeConvert = (time: number) => {
     if (!time) return '';
@@ -10,7 +11,7 @@ export const timeConvert = (time: number) => {
     return `${rhours}h ${rminutes}m`;
 };
 
-export const showGenres = (genres: Genres[]) => {
+export const showGenres = (genres: Genre[]) => {
     if (_.isEmpty(genres)) return '';
     const genresTitle = _.map(genres, genre => genre.name);
     return _.join(genresTitle, ', ');

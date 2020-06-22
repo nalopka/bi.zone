@@ -1,7 +1,8 @@
-import React, { FC, useState } from 'react';
-import { Drawer, Rate } from 'antd';
+import React, { FC } from 'react';
+import { Rate } from 'antd';
 
 import s from './MovieItem.module.css';
+import { getPoster } from '../../../../api/api';
 
 interface MovieBasket {
     id: number,
@@ -31,7 +32,7 @@ const MovieItem: FC<Props> = ({ info, showDetailedInfo }) => {
             <div className={s.main}>
                 <img
                     className={s.poster}
-                    src={`https://image.tmdb.org/t/p/original/${posterPath}`}
+                    src={getPoster(posterPath)}
                     alt="Movie poster"
                 />
                 <p className={s.about}>{`О фильме: ${overview}`}</p>

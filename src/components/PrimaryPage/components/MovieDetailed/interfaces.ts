@@ -1,10 +1,10 @@
-import { Genres } from '../../../FilterBox/interfaces';
+import { Genre } from '../../../FilterBox/interfaces';
 
 export interface MovieInfo {
     adult: boolean
     backdrop_path: string,
     budget: number,
-    genres: Genres[],
+    genres: Genre[],
     homepage: string,
     id: number,
     imdb_id: string,
