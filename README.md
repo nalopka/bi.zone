@@ -1,5 +1,5 @@
 
-Запуск проекта npm i -> npm start
+Запуск проекта npm i -> npm start  
 Нет поддержки ие11 
 Использованы библиотеки: axios, lodash, query-string, antd  
 
