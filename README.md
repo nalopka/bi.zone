@@ -1,7 +1,6 @@
 
-Запуск проекта npm i -> npm start  
-Webpack до конца не настроен (настройка с нуля), не оптимизирован build  
-Нет поддержки ие11  
+Запуск проекта npm i -> npm start
+Нет поддержки ие11 
 Использованы библиотеки: axios, lodash, query-string, antd  
 
 https://github.com/octav47/tech-task/blob/master/README.md  
