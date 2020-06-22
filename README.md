@@ -1,5 +1,6 @@
 
 Запуск проекта npm i -> npm start  
+Либо npm build -> serve -d ./dist
 Нет поддержки ие11     
 Использованы библиотеки: axios, lodash, query-string, antd 
 
