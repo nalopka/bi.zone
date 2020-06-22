@@ -6,7 +6,6 @@ import { Store } from 'antd/lib/form/interface';
 
 import s from './FilterBox.module.css';
 
-import { GENRES_LIST } from '../../index';
 import { mockYears } from './helpers';
 import { MovieInfo } from '../../intefaces';
 import { fetchMoviesByName, getPoster } from '../../api/api';
