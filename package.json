@@ -1,12 +1,13 @@
 {
-  "name": "project-boilerplate",
+  "name": "bi.zone",
+
   "version": "1.0.0",
   "description": "",
   "private": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack",
-    "start": "webpack-dev-server --open",
+    "build": "webpack --config webpack.prod.js",
+    "start": "webpack-dev-server --open --config webpack.dev.js",
     "check": "tsc"
   },
   "keywords": [],
@@ -64,6 +65,7 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-infinite-scroller": "^1.2.4",
-    "react-query": "^1.5.8"
+    "react-query": "^1.5.8",
+    "webpack-merge": "^4.2.2"
   }
 }

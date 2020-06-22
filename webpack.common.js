@@ -4,9 +4,6 @@ const Dotenv = require('dotenv-webpack');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = {
-    mode: "development",
-    devtool: 'inline-source-map',
-
     resolve: {
         extensions: [".ts", ".tsx", '.js'],
         alias: {
@@ -72,6 +69,7 @@ module.exports = {
     output: {
         filename: '[name].bundle.js',
         path: path.resolve(__dirname, 'dist'),
+        publicPath: './'
     },
     optimization: {
         splitChunks: {
